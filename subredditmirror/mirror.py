@@ -7,7 +7,7 @@ import sys
 
 
 def bot_setup():
-    return praw.Reddit('bot', user_agent='MirrorSubreddit')
+    return praw.Reddit('bot')
 
 
 def parse_args(args):
@@ -17,11 +17,20 @@ def parse_args(args):
     parser.add_argument('--count', help='how many posts to try to copy',
                         default=15, type=int)
     parser.add_argument('--sort', help='how to sort posts', default='new',
-                        choices=['hot', 'new', 'rising', 'controversial', 'top'])
+                        choices=['hot', 'new', 'controversial', 'top'])
     parser.add_argument('--time', help='time frame to grab from', default='day',
                         choices=['day', 'week', 'month', 'year', 'all'])
 
     return parser.parse_args(args)
+
+
+def get_posts(reddit, subreddit, count, sort, time):
+    return {
+        'hot': reddit.subreddit(subreddit).hot(limit=count),
+        'new': reddit.subreddit(subreddit).new(limit=count),
+        'controversial': reddit.subreddit(subreddit).controversial(time, limit=count),
+        'top': reddit.subreddit(subreddit).top(time, limit=count),
+    }[sort]
 
 
 if __name__ == '__main__':
