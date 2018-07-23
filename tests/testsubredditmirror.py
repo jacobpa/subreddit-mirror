@@ -3,6 +3,7 @@ import praw
 from prawcore import exceptions
 from argparse import ArgumentError
 from subredditmirror import mirror
+import subredditmirror.exceptions
 
 
 class MirrorTest(unittest.TestCase):
@@ -42,3 +43,22 @@ class MirrorTest(unittest.TestCase):
                                       'controversial',
                                       'year'))
         self.assertLessEqual(len(posts), 10)
+
+    def test_mirror_subreddit_not_moderator(self):
+        posts = list(mirror.get_posts(self.reddit,
+                                      'sneakerdeals',
+                                      self.expected_dictionary['count'],
+                                      self.expected_dictionary['sort'],
+                                      self.expected_dictionary['time']))
+        with self.assertRaises(subredditmirror.exceptions.NotModeratorError):
+            mirror.mirror_posts(self.reddit, 'hiphopheads', posts)
+
+    def test_mirror_subreddit_moderator(self):
+        posts = list(mirror.get_posts(self.reddit,
+                                      'sneakerdeals',
+                                      self.expected_dictionary['count'],
+                                      self.expected_dictionary['sort'],
+                                      self.expected_dictionary['time']))
+        successful_posts = mirror.mirror_posts(self.reddit, 'privatesub', posts)
+
+        self.assertEqual(successful_posts, len(posts))
