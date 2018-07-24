@@ -4,15 +4,18 @@ for testing subreddit-specific bots.
 from argparse import ArgumentParser
 import praw
 import sys
+from progress.bar import Bar
 from .exceptions import NotModeratorError
 
 
 def main():
     reddit = bot_setup()
     args = parse_args(sys.argv[1:])
+    print('Gathering posts...')
     posts = get_posts(reddit, args.subreddit, args.count, args.sort, args.time)
 
     mirror_posts(reddit, args.destination, posts)
+    print()
 
 
 def bot_setup():
@@ -44,11 +47,16 @@ def get_posts(reddit, subreddit, count, sort, time):
 
 def mirror_posts(reddit, destination, posts):
     successful_posts = 0
+    posts = list(posts)
+    progress = Bar('Crossposting...', max=len(posts))
+    progress.check_tty = False
 
     if reddit.user.me().name in reddit.subreddit(destination).moderator():
         for post in posts:
             post.crosspost(destination, send_replies=False)
             successful_posts += 1
+            progress.next()
+        progress.finish()
     else:
         raise NotModeratorError("You are not a moderator of this subreddit.")
 
