@@ -116,18 +116,18 @@ def mirror_posts(reddit, destination, posts):
         posts: A `praw.models.ListingGenerator` containing the posts to
             crosspost
     """
-    successful_posts = 0
+    post_dict = {}
     posts = list(posts)
     progress = Bar('Crossposting...', max=len(posts))
     progress.check_tty = False
 
     if reddit.user.me().name in reddit.subreddit(destination).moderator():
         for post in posts:
-            post.crosspost(destination, send_replies=False)
-            successful_posts += 1
+            crosspost = post.crosspost(destination, send_replies=False)
+            post_dict[post.id] = crosspost.id
             progress.next()
         progress.finish()
     else:
         raise NotModeratorError("You are not a moderator of this subreddit.")
 
-    return successful_posts
+    return post_dict

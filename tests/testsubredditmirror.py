@@ -72,9 +72,9 @@ class MirrorTest(unittest.TestCase):
     def test_mirror_subreddit_moderator(self):
         posts = list(mirror.get_posts(self.reddit,
                                       'sneakerdeals',
-                                      self.expected_dictionary['count'],
+                                      5,
                                       self.expected_dictionary['sort'],
                                       self.expected_dictionary['time']))
-        successful_posts = mirror.mirror_posts(self.reddit, 'privatesub', posts)
+        successful_posts = len(mirror.mirror_posts(self.reddit, 'privatesub', posts))
 
         self.assertEqual(successful_posts, len(posts))
