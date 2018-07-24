@@ -5,14 +5,19 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="subreddit-mirror",
-    version="0.0.1",
+    version="1.0.0",
     author="Jacob Patterson",
     author_email="jacob@jacobpa.com",
+    entry_points={
+        "console_scripts": ['subreddit-mirror = subredditmirror.mirror:main']
+    },
+    classifiers=['Programming Language :: Python :: 3.6',
+                 'Operating System :: OS Independent',
+                 'Natural Language :: English']
     description="Copy posts from one subreddit to another",
+    install_requires=['progress==1.4', 'praw==5.4.0'],
+    license="GNU GPLv3"
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=['subredditmirror'],
-    entry_points={
-        "console_scripts": ['subreddit-mirror = subredditmirror.mirror:main']
-    }
 )
