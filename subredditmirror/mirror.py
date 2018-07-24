@@ -39,7 +39,7 @@ def bot_setup():
 
 
 def parse_args(args):
-    parser = ArgumentParser(description='Mirror posts from another subreddit.')
+    parser = ArgumentParser(prog='subreddit-mirror', description='Mirror posts from another subreddit.')
     parser.add_argument('subreddit', help='subreddit to copy posts from')
     parser.add_argument('destination', help='destination subreddit to post to')
     parser.add_argument('--count', help='how many posts to try to copy',
@@ -48,6 +48,11 @@ def parse_args(args):
                         choices=['hot', 'new', 'controversial', 'top'])
     parser.add_argument('--time', help='time frame to grab from', default='day',
                         choices=['day', 'week', 'month', 'year', 'all'])
+
+    parsed_args = parser.parse_args(args)
+
+    if parsed_args.count < 1:
+        parser.error("Minimum post count is 1")
 
     return parser.parse_args(args)
 
