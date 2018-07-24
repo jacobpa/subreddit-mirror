@@ -86,17 +86,17 @@ def get_posts(reddit, subreddit, count, sort, time):
     method and timeframe.
 
     Arguments:
-        reddit: A praw.Reddit instance
+        reddit: A `praw.Reddit` instance
         subreddit: A string containing the name of the subreddit to copy
-        posts from
+            posts from
         count: The number of posts to copy from subreddit
-        sort: The sorting method to use, one of 'hot', 'new',
-        'controversial', or 'top'
-        time: The timeframe to grab posts from, one of 'day', 'week',
-        'month', 'year', or 'all'
+        sort: The sorting method to use, one of `hot`, `new`,
+            `controversial`, or `top`
+        time: The timeframe to grab posts from, one of `day`, `week`,
+            `month`, `year`, or `all`
 
     Returns:
-        A praw.models.ListingGenerator containing the posts returned by
+        A `praw.models.ListingGenerator` containing the posts returned by
         the arguments
     """
     return {
@@ -111,9 +111,10 @@ def mirror_posts(reddit, destination, posts):
     """Mirror (crosspost) posts from one subreddit to another
 
     Arguments:
-        reddit: A praw.Reddit instance
+        reddit: A `praw.Reddit` instance
         destination: A Subreddit model to post to
-        posts: A ListingGenerator containing the posts to crosspost
+        posts: A `praw.models.ListingGenerator` containing the posts to
+            crosspost
     """
     successful_posts = 0
     posts = list(posts)
