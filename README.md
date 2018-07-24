@@ -9,6 +9,43 @@ posts to, and allows you to choose, along with the source/destination subreddit:
 * The time frame to grab posts from (day, week, month, year, all)
 * How many posts to grab
 
+## Usage
+```
+usage: subreddit-mirror [-h] [--count COUNT]
+                        [--sort {hot,new,controversial,top}]
+                        [--time {day,week,month,year,all}]
+                        subreddit destination
+
+Mirror posts from another subreddit.
+
+positional arguments:
+  subreddit             subreddit to copy posts from
+  destination           destination subreddit to post to
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --count COUNT         how many posts to try to copy
+  --sort {hot,new,controversial,top}
+                        how to sort posts
+  --time {day,week,month,year,all}
+                        time frame to grab from
+```
+
+### Optional Parameter Defaults
+* `--count`: `15`
+* `--sort`: `new`
+* `--time`: `day`
+
+### Examples
+
+* `$ subreddit-mirror hiphopheads trapmuzik`
+
+    Copies the newest 15 newest poststoday from /r/hiphopheads to /r/trapmuzik
+* `$ subreddit-mirror calamariraceteam motorcycles --count 10 --sort top --time all`:
+
+    Copies the top 10 posts of all time from /r/calamariraceteam to /r/motorcycles
+
+## License
 ```
 A bot to copy posts from one subreddit to another.
 Copyright (C) 2018  Jacob Patterson
