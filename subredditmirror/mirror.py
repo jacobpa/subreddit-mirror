@@ -47,5 +47,8 @@ def mirror_posts(reddit, destination, posts):
     return successful_posts
 
 if __name__ == '__main__':
+    reddit = bot_setup()
     args = parse_args(sys.argv[1:])
-    print(vars(args))
+    posts = get_posts(reddit, args.subreddit, args.count, args.sort, args.time)
+
+    mirror_posts(reddit, args.destination, posts)
