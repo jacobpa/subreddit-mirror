@@ -25,6 +25,8 @@ from .exceptions import NotModeratorError
 
 
 def main():
+    """Main running function of entire script."""
+
     reddit = bot_setup()
     args = parse_args(sys.argv[1:])
     print('Gathering posts...')
@@ -35,10 +37,32 @@ def main():
 
 
 def bot_setup():
+    """Start a new Reddit instance.
+
+    This creates a REddit instance based on the [bot] entry in praw.ini
+    in the project root directory, or based on the current system user's
+    directory. See the `PRAW Documentation on the topic
+    <https://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html>`_.
+
+    Returns:
+        A new praw.Reddit instance
+    """
     return praw.Reddit('bot')
 
 
 def parse_args(args):
+    """Parse arguments, represented as a string.
+
+    This function generates an argument parser, and will use this to
+    parse a string of command line arguments, which are stored and used
+    throughout the program to control different input.
+
+    Arguments:
+        args: A string representing command line arguments
+
+    Returns:
+        A collection of arguments and their values
+    """
     parser = ArgumentParser(prog='subreddit-mirror', description='Mirror posts from another subreddit.')
     parser.add_argument('subreddit', help='subreddit to copy posts from')
     parser.add_argument('destination', help='destination subreddit to post to')
@@ -58,6 +82,23 @@ def parse_args(args):
 
 
 def get_posts(reddit, subreddit, count, sort, time):
+    """Gets a certain amount of posts from a subreddit, based on a sort
+    method and timeframe.
+
+    Arguments:
+        reddit: A praw.Reddit instance
+        subreddit: A string containing the name of the subreddit to copy
+        posts from
+        count: The number of posts to copy from subreddit
+        sort: The sorting method to use, one of 'hot', 'new',
+        'controversial', or 'top'
+        time: The timeframe to grab posts from, one of 'day', 'week',
+        'month', 'year', or 'all'
+
+    Returns:
+        A praw.models.ListingGenerator containing the posts returned by
+        the arguments
+    """
     return {
         'hot': reddit.subreddit(subreddit).hot(limit=count),
         'new': reddit.subreddit(subreddit).new(limit=count),
@@ -67,6 +108,13 @@ def get_posts(reddit, subreddit, count, sort, time):
 
 
 def mirror_posts(reddit, destination, posts):
+    """Mirror (crosspost) posts from one subreddit to another
+
+    Arguments:
+        reddit: A praw.Reddit instance
+        destination: A Subreddit model to post to
+        posts: A ListingGenerator containing the posts to crosspost
+    """
     successful_posts = 0
     posts = list(posts)
     progress = Bar('Crossposting...', max=len(posts))

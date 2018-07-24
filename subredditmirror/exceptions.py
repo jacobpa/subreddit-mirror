@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""A collection of exceptions used by the module.
+"""
+
 
 class Error(Exception):
     """Base class for exceptions in this module"""
