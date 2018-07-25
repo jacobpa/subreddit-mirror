@@ -126,6 +126,20 @@ def get_posts(reddit, subreddit, count, sort, time):
 
 
 def mirror_comments(comments, target_thread, last_posted_comment):
+    """Mirror comments to the target thread.
+
+    This is a recursive function which will mirror the comments from a 
+    post provided in a `praw. models.comment_forest.CommenForest` to the
+    target thread.
+
+    Arguments:
+        comments: The CommentForest which contains the comments from the
+            source thread
+        target_thread: The Submission which comments will be mirrored to
+        last_posted_comment: The last Comment which was posted to the 
+            target thread, used recursively to maintain proper 
+            parent/child comment relationship from the source Submission
+    """
     for comment in comments:
         comment_text = comment.body.strip()
         if len(comment.replies.list()) == 0:
