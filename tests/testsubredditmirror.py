@@ -28,7 +28,8 @@ class MirrorTest(unittest.TestCase):
                                     'destination': 's2',
                                     'count': 15,
                                     'sort': 'new',
-                                    'time': 'day'}
+                                    'time': 'day',
+                                    'comments': False}
         self.reddit = mirror.bot_setup()
 
     def test_parse_args_required_args(self):
@@ -40,8 +41,9 @@ class MirrorTest(unittest.TestCase):
         self.expected_dictionary['count'] = 20
         self.expected_dictionary['sort'] = 'hot'
         self.expected_dictionary['time'] = 'month'
+        self.expected_dictionary['comments'] = True
 
-        args = mirror.parse_args('s1 s2 --count 20 --sort hot --time month'.split())
+        args = mirror.parse_args('s1 s2 --count 20 --sort hot --time month --comments'.split())
         self.assertDictEqual(vars(args), self.expected_dictionary)
 
     def test_get_posts_defaults(self):
@@ -72,9 +74,9 @@ class MirrorTest(unittest.TestCase):
     def test_mirror_subreddit_moderator(self):
         posts = list(mirror.get_posts(self.reddit,
                                       'sneakerdeals',
-                                      self.expected_dictionary['count'],
+                                      5,
                                       self.expected_dictionary['sort'],
                                       self.expected_dictionary['time']))
-        successful_posts = mirror.mirror_posts(self.reddit, 'privatesub', posts)
+        successful_posts = len(mirror.mirror_posts(self.reddit, 'privatesub', posts))
 
         self.assertEqual(successful_posts, len(posts))

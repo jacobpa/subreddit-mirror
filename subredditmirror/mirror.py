@@ -32,7 +32,22 @@ def main():
     print('Gathering posts...')
     posts = get_posts(reddit, args.subreddit, args.count, args.sort, args.time)
 
-    mirror_posts(reddit, args.destination, posts)
+    post_dict = mirror_posts(reddit, args.destination, posts)
+
+    if args.comments:
+        progress = Bar('Mirroring comments for {} threads, this may take a while...'.format(len(post_dict)), max=len(post_dict))
+        progress.start()
+
+        for original, mirror in post_dict.items():
+            original_submission = reddit.submission(original)
+            mirrored_submission = reddit.submission(mirror)
+            original_comments = original_submission.comments
+            original_comments.replace_more()
+
+            mirror_comments(original_comments, mirrored_submission, None)
+            progress.next()
+        progress.finish()
+
     print()
 
 
@@ -72,6 +87,9 @@ def parse_args(args):
                         choices=['hot', 'new', 'controversial', 'top'])
     parser.add_argument('--time', help='time frame to grab from', default='day',
                         choices=['day', 'week', 'month', 'year', 'all'])
+    parser.add_argument('--comments', help='[CAUTION] also mirror comments'
+                        ' from threads, may take a long time',
+                        action='store_true')
 
     parsed_args = parser.parse_args(args)
 
@@ -107,6 +125,39 @@ def get_posts(reddit, subreddit, count, sort, time):
     }[sort]
 
 
+def mirror_comments(comments, target_thread, last_posted_comment):
+    """Mirror comments to the target thread.
+
+    This is a recursive function which will mirror the comments from a 
+    post provided in a `praw. models.comment_forest.CommenForest` to the
+    target thread.
+
+    Arguments:
+        comments: The CommentForest which contains the comments from the
+            source thread
+        target_thread: The Submission which comments will be mirrored to
+        last_posted_comment: The last Comment which was posted to the 
+            target thread, used recursively to maintain proper 
+            parent/child comment relationship from the source Submission
+    """
+    for comment in comments:
+        comment_text = comment.body.strip()
+        if len(comment.replies.list()) == 0:
+            if comment.is_root:
+                target_thread.reply(comment_text)
+            else:
+                last_posted_comment.reply(comment_text)
+        else:
+            new_comment = None
+
+            if comment.is_root:
+                new_comment = target_thread.reply(comment_text)
+            else:
+                new_comment = last_posted_comment.reply(comment_text)
+
+            mirror_comments(comment.replies, target_thread, new_comment)
+
+
 def mirror_posts(reddit, destination, posts):
     """Mirror (crosspost) posts from one subreddit to another
 
@@ -116,18 +167,18 @@ def mirror_posts(reddit, destination, posts):
         posts: A `praw.models.ListingGenerator` containing the posts to
             crosspost
     """
-    successful_posts = 0
+    post_dict = {}
     posts = list(posts)
-    progress = Bar('Crossposting...', max=len(posts))
-    progress.check_tty = False
 
     if reddit.user.me().name in reddit.subreddit(destination).moderator():
+        progress = Bar('Crossposting...', max=len(posts))
+        progress.start()
         for post in posts:
-            post.crosspost(destination, send_replies=False)
-            successful_posts += 1
+            crosspost = post.crosspost(destination, send_replies=False)
+            post_dict[post.id] = crosspost.id
             progress.next()
         progress.finish()
     else:
         raise NotModeratorError("You are not a moderator of this subreddit.")
 
-    return successful_posts
+    return post_dict
