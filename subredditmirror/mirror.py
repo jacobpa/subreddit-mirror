@@ -22,6 +22,7 @@ import praw
 import sys
 from progress.bar import Bar
 from .exceptions import NotModeratorError
+from . import __version__
 
 
 def main():
@@ -78,7 +79,8 @@ def parse_args(args):
     Returns:
         A collection of arguments and their values
     """
-    parser = ArgumentParser(prog='subreddit-mirror', description='Mirror posts from another subreddit.')
+    parser = ArgumentParser(prog='subreddit-mirror', 
+                            description='Mirror posts from another subreddit.')
     parser.add_argument('subreddit', help='subreddit to copy posts from')
     parser.add_argument('destination', help='destination subreddit to post to')
     parser.add_argument('--count', help='how many posts to try to copy',
@@ -90,6 +92,8 @@ def parse_args(args):
     parser.add_argument('--comments', help='[CAUTION] also mirror comments'
                         ' from threads, may take a long time',
                         action='store_true')
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s {}'.format(__version__))
 
     parsed_args = parser.parse_args(args)
 

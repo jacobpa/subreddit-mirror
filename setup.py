@@ -1,11 +1,12 @@
 import setuptools
+import subredditmirror
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="subreddit-mirror",
-    version="1.1.0",
+    version=subredditmirror.__version__,
     author="Jacob Patterson",
     author_email="jacob@jacobpa.com",
     entry_points={
