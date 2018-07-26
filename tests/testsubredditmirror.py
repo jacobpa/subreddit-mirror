@@ -77,6 +77,6 @@ class MirrorTest(unittest.TestCase):
                                       5,
                                       self.expected_dictionary['sort'],
                                       self.expected_dictionary['time']))
-        successful_posts = len(mirror.mirror_posts(self.reddit, 'privatesub', posts))
+        successful_posts = len(mirror.mirror_posts(self.reddit, 'yoursubreddit', posts))
 
         self.assertEqual(successful_posts, len(posts))
