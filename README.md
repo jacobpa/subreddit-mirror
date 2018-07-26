@@ -1,6 +1,6 @@
 # subreddit-mirror
 
-This is a simple reddit bot which will copy posts from one subreddit to another,
+This is a simple script which will copy posts from one subreddit to another,
 ideally used for copying posts to a private subreddit for bot development
 purposes. It requires you to be a moderator of the subreddit you are copying
 posts to, and allows you to choose, along with the source/destination subreddit:
@@ -47,7 +47,7 @@ optional arguments:
 
 ## License
 ```
-A bot to copy posts from one subreddit to another.
+subreddit-mirror -- A script to copy posts from one subreddit to another.
 Copyright (C) 2018  Jacob Patterson
 
 This program is free software: you can redistribute it and/or modify

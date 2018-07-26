@@ -15,7 +15,7 @@ setuptools.setup(
     classifiers=['Programming Language :: Python :: 3.6',
                  'Operating System :: OS Independent',
                  'Natural Language :: English'],
-    description="Copy posts from one subreddit to another",
+    description="A script to copy posts from one subreddit to another.",
     install_requires=['progress==1.4', 'praw==5.4.0'],
     license="GNU GPLv3",
     long_description=long_description,

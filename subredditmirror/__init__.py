@@ -1,4 +1,4 @@
-# A bot to copy posts from one subreddit to another.
+# subreddit-mirror -- A script to copy posts from one subreddit to another.
 # Copyright (C) 2018  Jacob Patterson
 
 # This program is free software: you can redistribute it and/or modify
